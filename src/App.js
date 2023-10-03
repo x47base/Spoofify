@@ -92,11 +92,13 @@ const Track = ({image_url, title, author, album, length, url}) => {
   );
 }
 
-function Main() {
+const Main = () => {
   return (
-    <main nameClass="fixed top-9 right-0 p-3 bg-red-900">
-      <Track image_url="https://upload.wikimedia.org/wikipedia/en/b/b5/Ascend_Illenium_album.jpg" title="The Rock" length="187"/>
-    </main>
+    <div nameClass="fixed top-0 right-0 max-w-11/12 w-11/12 text-textLight">
+      <TableHeader/>
+      <Track image_url="https://upload.wikimedia.org/wikipedia/en/b/b5/Ascend_Illenium_album.jpg" title="Ascend" author="Illenium"  length="2:87"/>
+
+    </div>
   );
 }
 
@@ -115,8 +117,7 @@ function App() {
     <div className="App">
       <SideBar />
       <Player />
-      <TableHeader/>
-      <Track image_url="https://upload.wikimedia.org/wikipedia/en/b/b5/Ascend_Illenium_album.jpg" title="Ascend" author="Illenium"  length="2:87"/>
+      <Main />
 
       
     </div>
