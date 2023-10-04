@@ -12,6 +12,9 @@ import {
 import { TiImageOutline } from "react-icons/ti";
 import "./App.css";
 
+import Modal from "./Modal";
+import "./Modal.css";
+
 const SideBarIcon = ({ icon, classes }) => {
   return (
     <div className="sidebar-icon">
@@ -22,23 +25,23 @@ const SideBarIcon = ({ icon, classes }) => {
 
 const SideBar = () => {
   return (
-    <div className="fixed top-0 left-0 w-1/12 h-screen bg-neutral-900 flex flex-col">
+    <div className="sidebar fixed top-0 left-0 w-1/12 h-screen bg-neutral-900 flex flex-col">
       <a href="/" className="nav__brand font-bold text-green-500 mt-3 mb-6">
         Spoofify
       </a>
       <div className="flex flex-col gap-4 justify-between">
         <div className="flex flex-col justify-between gap-4 sidebar-main">
-          <a href="/" className="">
-            <SideBarIcon icon={<BsFillHouseFill size="28" />} classes="" />
+          <a href="/" className="" data-tabId="1">
+            <SideBarIcon icon={<BsFillHouseFill size="28" />} classes="hover:text-green-500 active-tab" />
           </a>
 
-          <a href="#" className="">
-            <SideBarIcon icon={<BsFillBookmarksFill size="28" />} classes="" />
+          <a href="#" className="" data-tabId="2">
+            <SideBarIcon icon={<BsFillBookmarksFill size="28" />} classes="hover:text-green-500" />
           </a>
         </div>
         <div className="sidebar-other fixed bottom-0 left-0 w-32 mb-6">
-          <a href="#" className="">
-            <SideBarIcon icon={<BsFillGearFill size="28" />} classes="" />
+          <a href="#" className="" data-tabId="3">
+            <SideBarIcon icon={<BsFillGearFill size="28" />} classes="hover:text-green-500" />
           </a>
         </div>
       </div>
@@ -132,7 +135,7 @@ const Track = ({ image_url, title, author, album, length, url }) => {
 
 const Main = () => {
   return (
-    <div className="fixed right-0 top-0 w-11/12">
+    <div className="fixed right-0 top-0 w-11/12 z-20">
       <div className="fixed top-0 right-0 w-11/12 grid mx-auto py-2 px-4 mb-2 ">
         <TrackHeader />
         <Track
@@ -170,13 +173,23 @@ function Footer() {
 
 function App() {
   return (
-    <div className="App">
-      <SideBar />
-      <Player />
-      <Main />
-      
+    <div>
+      <Modal title="Welcome" description="Welcome to Spoofify! The #1 Music Platform." button_text="Close"/>
+
+      <div className="App">
+        <SideBar />
+        <Player />
+        <Main />
+
+      </div>
     </div>
   );
+}
+
+function sidebar_button_click(tab_id) {
+  document.querySelector('.active-tab').classList.remove('active-tab')
+
+  document.querySelectorAll('.sidebar a .sidebar-icon')[tab_id].children[0].classList.add('active-tab')
 }
 
 export default App;

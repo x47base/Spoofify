@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Modal from './Modal';
+import './Modal.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <Modal title="Welcome" description="Welcome to Spoofify! The #1 Music Platform." button_text="Close"/>
     <App />
   </React.StrictMode>
 );
