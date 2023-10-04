@@ -1,3 +1,19 @@
+/*
+import {
+	BsPlayFill,
+	BsFillPauseFill
+} from "react-icons/bs";
+import { TiImageOutline } from "react-icons/ti";
+  
+const SideBarIcon = ({ icon, classes }) => {
+	return (
+	  <div className="sidebar-icon">
+		<div className={classes}>{icon}</div>
+	  </div>
+	);
+};
+*/
+
 function remove_other() {
 	document.querySelector('.active-tab').classList.remove('active-tab')
 }

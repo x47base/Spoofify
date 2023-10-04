@@ -102,7 +102,7 @@ const TrackHeader = () => {
           />
         </div>
         <span className="text-white">TITLE</span>
-        <span className="text-white">AUTHOR</span>
+        <span className="text-white">ARTIST</span>
         <span className="text-white">
           <SideBarIcon icon={<BsClock size="18px" />} classes="" />
         </span>
@@ -111,12 +111,12 @@ const TrackHeader = () => {
   );
 };
 
-const Track = ({ image_url, title, author, length, sound_url }) => {
+const Track = ({ image_url, title, artist, length, sound_url }) => {
   return (
     <div nameClass="track flex flex-row mx-auto rounded-sm transition-colors hover:bg-hover cursor-pointer hover:text-hover">
       <div className="flex flex-row justify-between p-2 items-center">
         <div className="flex col-span-1 justify-evenly">
-          <button nameClass="btn" id={`btn-${title.replace(/\s/g, '')}-${author}`}>
+          <button nameClass="btn" id={`btn-${title.replace(/\s/g, '')}-${artist}`}>
             <SideBarIcon
               icon={<BsPlayFill size="20" />}
               classes="text-white hover:text-green-500"
@@ -129,9 +129,9 @@ const Track = ({ image_url, title, author, length, sound_url }) => {
           />
         </div>
         <span className="text-white">{title}</span>
-        <span className="text-white">{author}</span>
+        <span className="text-white">{artist}</span>
         <span className="text-white">{length}</span>
-        <audio id={`sound-${title.replace(/\s/g, '')}-${author}`} src={sound_url}/>
+        <audio id={`sound-${title.replace(/\s/g, '')}-${artist}`} src={sound_url}/>
       </div>
     </div>
   );
@@ -145,20 +145,20 @@ const Main = () => {
         <Track
           image_url="https://i.scdn.co/image/ab67616d0000b273bd9e9490d5198c41cb85b669"
           title="Fight Back"
-          author="Neffex"
+          artist="Neffex"
           length="3:16"
           sound_url="./sounds"
         />
         <Track
           image_url="https://upload.wikimedia.org/wikipedia/en/b/b5/Ascend_Illenium_album.jpg"
           title="Ascend"
-          author="Illenium"
+          artist="Illenium"
           length="2:87"
         />
         <Track
           image_url="https://upload.wikimedia.org/wikipedia/en/b/b5/Ascend_Illenium_album.jpg"
           title="Ascend"
-          author="Illenium"
+          artist="Illenium"
           length="2:87"
         />
       </div>
