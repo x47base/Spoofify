@@ -202,14 +202,4 @@ function App() {
   );
 }
 
-function remove_other() {
-  document.querySelector('.active-tab').classList.remove('active-tab')
-}
-document.querySelectorAll('.sidebar__link').forEach(element => {
-	element.addEventListener('click',function(){
-		remove_other()
-		element.children[0].classList.add('active-tab')
-	})
-})
-
 export default App;
