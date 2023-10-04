@@ -48,20 +48,6 @@ const SideBar = () => {
   );
 };
 
-const create_audio = ({ id, src }) => {
-  var sound = document.createElement("audio"); 
-  sound.id = {id}
-  sound.src = {src}
-  return sound
-}
-
-const play_audio = ({ src, sound }) => {
-  sound.src = src
-  sound.play()
-}
-
-
-
 const Player = () => {
   return (
     <div className="player fixed bottom-0 right-0 p-3 h-12 w-11/12 bg-neutral-800 justify-center items-center">
@@ -79,6 +65,7 @@ const Player = () => {
           1.58
         </span>
         <input
+          id="songCurrentTimeSlider"
           type="range"
           max="100"
           defaultValue="100"
@@ -124,12 +111,12 @@ const TrackHeader = () => {
   );
 };
 
-const Track = ({ image_url, title, author, album, length, url }) => {
+const Track = ({ image_url, title, author, length, sound_url }) => {
   return (
     <div nameClass="track flex flex-row mx-auto rounded-sm transition-colors hover:bg-hover cursor-pointer hover:text-hover">
       <div className="flex flex-row justify-between p-2 items-center">
         <div className="flex col-span-1 justify-evenly">
-          <button nameClass="btn" data-trackId="">
+          <button nameClass="btn" id={`btn-${title.replace(/\s/g, '')}-${author}`}>
             <SideBarIcon
               icon={<BsPlayFill size="20" />}
               classes="text-white hover:text-green-500"
@@ -144,6 +131,7 @@ const Track = ({ image_url, title, author, album, length, url }) => {
         <span className="text-white">{title}</span>
         <span className="text-white">{author}</span>
         <span className="text-white">{length}</span>
+        <audio id={`sound-${title.replace(/\s/g, '')}-${author}`} src={sound_url}/>
       </div>
     </div>
   );
@@ -155,10 +143,11 @@ const Main = () => {
       <div className="fixed top-0 right-0 w-11/12 grid mx-auto py-2 px-4 mb-2 ">
         <TrackHeader />
         <Track
-          image_url="https://upload.wikimedia.org/wikipedia/en/b/b5/Ascend_Illenium_album.jpg"
-          title="Ascend"
-          author="Illenium"
-          length="2:87"
+          image_url="https://i.scdn.co/image/ab67616d0000b273bd9e9490d5198c41cb85b669"
+          title="Fight Back"
+          author="Neffex"
+          length="3:16"
+          sound_url="./sounds"
         />
         <Track
           image_url="https://upload.wikimedia.org/wikipedia/en/b/b5/Ascend_Illenium_album.jpg"
@@ -190,7 +179,7 @@ function Footer() {
 function App() {
   return (
     <div>
-      <Modal title="Welcome" description="Welcome to Spoofify! The #1 Music Platform." button_text="Close"/>
+      <Modal title="Welcome" description="Welcome to Spoofify! The #1 Music Platform." button_text="Start"/>
 
       <div className="App">
         <SideBar />
