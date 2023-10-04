@@ -13,7 +13,6 @@ import { TiImageOutline } from "react-icons/ti";
 import "./App.css";
 
 import Modal from "./Modal";
-import "./Modal.css";
 
 const SideBarIcon = ({ icon, classes }) => {
   return (
@@ -30,17 +29,17 @@ const SideBar = () => {
         Spoofify
       </a>
       <div className="flex flex-col gap-4 justify-between">
-        <div className="flex flex-col justify-between gap-4 sidebar-main">
-          <a href="/" className="" data-tabId="1">
+        <div className="upper-container flex flex-col justify-between gap-4 sidebar-main">
+          <a href="/" className="sidebar__link">
             <SideBarIcon icon={<BsFillHouseFill size="28" />} classes="hover:text-green-500 active-tab" />
           </a>
 
-          <a href="#" className="" data-tabId="2">
+          <a href="#" className="sidebar__link">
             <SideBarIcon icon={<BsFillBookmarksFill size="28" />} classes="hover:text-green-500" />
           </a>
         </div>
-        <div className="sidebar-other fixed bottom-0 left-0 w-32 mb-6">
-          <a href="#" className="" data-tabId="3">
+        <div className="lower-container sidebar-other fixed bottom-0 left-0 w-32 mb-6">
+          <a href="#" className="sidebar__link">
             <SideBarIcon icon={<BsFillGearFill size="28" />} classes="hover:text-green-500" />
           </a>
         </div>
@@ -49,9 +48,23 @@ const SideBar = () => {
   );
 };
 
+const create_audio = ({ id, src }) => {
+  var sound = document.createElement("audio"); 
+  sound.id = {id}
+  sound.src = {src}
+  return sound
+}
+
+const play_audio = ({ src, sound }) => {
+  sound.src = src
+  sound.play()
+}
+
+
+
 const Player = () => {
   return (
-    <div className="fixed bottom-0 right-0 p-3 h-12 w-11/12 bg-neutral-800 justify-center items-center">
+    <div className="player fixed bottom-0 right-0 p-3 h-12 w-11/12 bg-neutral-800 justify-center items-center">
       <div id="player-container" className="flex flex-row justify-center gap-4">
         <span
           id="songCurrentlyPlaying"
@@ -72,7 +85,10 @@ const Player = () => {
           className="cursor-pointer"
           onChange={() => {}}
         />
-        <span></span>
+        <span
+          id="songLength"
+          className="text-textLight text-base font-medium"
+        >2:57</span>
         <button nameClass="btn">
           <SideBarIcon icon={<BsFillHandThumbsUpFill size="18" />} />
         </button>
@@ -86,7 +102,7 @@ const Player = () => {
 
 const TrackHeader = () => {
   return (
-    <div nameClass="flex flex-row mx-auto rounded-sm transition-colors hover:bg-hover cursor-pointer">
+    <div nameClass="trackHeader flex flex-row mx-auto rounded-sm transition-colors hover:bg-hover cursor-pointer">
       <div className="flex flex-row justify-between p-2 border-b-[1px] border-border mb-2 itmes-center">
         <div className="flex col-span-1 justify-evenly">
           <SideBarIcon
@@ -110,7 +126,7 @@ const TrackHeader = () => {
 
 const Track = ({ image_url, title, author, album, length, url }) => {
   return (
-    <div nameClass="flex flex-row mx-auto rounded-sm transition-colors hover:bg-hover cursor-pointer hover:text-hover">
+    <div nameClass="track flex flex-row mx-auto rounded-sm transition-colors hover:bg-hover cursor-pointer hover:text-hover">
       <div className="flex flex-row justify-between p-2 items-center">
         <div className="flex col-span-1 justify-evenly">
           <button nameClass="btn" data-trackId="">
@@ -186,10 +202,14 @@ function App() {
   );
 }
 
-function sidebar_button_click(tab_id) {
+function remove_other() {
   document.querySelector('.active-tab').classList.remove('active-tab')
-
-  document.querySelectorAll('.sidebar a .sidebar-icon')[tab_id].children[0].classList.add('active-tab')
 }
+document.querySelectorAll('.sidebar__link').forEach(element => {
+	element.addEventListener('click',function(){
+		remove_other()
+		element.children[0].classList.add('active-tab')
+	})
+})
 
 export default App;
