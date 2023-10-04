@@ -14,6 +14,62 @@ import "./App.css";
 
 import Modal from "./Modal";
 
+/* schema: { title: "", artist: "", duration: "", image_url: "", path: ""} */
+let sounds = [
+	{ title: "Fight Back", artist: "NEFFEX", duration: "3:16", image_url: "https://i.scdn.co/image/ab67616d0000b273bd9e9490d5198c41cb85b669", path: "./sounds/NEFFEX - Fight Back.mp3" },
+  { title: "Best of Me", artist: "NEFFEX", duration: "3:59", image_url: "https://i1.sndcdn.com/artworks-000233271395-45pahr-t500x500.jpg", path: "./sounds/NEFFEX - Best of Me.mp3"},
+  { title: "Never Give Up", artist: "NEFFEX", duration: "4:11", image_url: "https://i1.sndcdn.com/artworks-000237594251-ibzt3b-t500x500.jpg", path: "./sounds/NEFFEX - Never Give Up.mp3"}
+]
+
+function isPlaying(sobj) { return !sobj.paused; }
+
+function setup_sound(soundElement){
+	let title = soundElement.title;
+	let artist = soundElement.artist;
+	let duration = soundElement.duration;
+	let path = soundElement.path;
+
+  let current_title = document.getElementById('songCurrentlyPlaying')
+  let current_time = document.getElementById('songCurrentTime')
+  let current_time_slider = document.getElementById('songCurrentTimeSlider')
+  let current_max_time = document.getElementById('songLength')
+
+  if(path == undefined){
+    path = `${artist} - ${title}.mp3`
+  }
+
+	let base = `${title.replace(/\s/g, '')}-${artist}`;
+	let btn = document.getElementById(`btn-${base}`);
+	let audioFile = document.getElementById(`sound-${base}`);
+
+	btn.onclick = function(){
+		if (isPlaying(audioFile)){
+			audioFile.src = path;
+			audioFile.play();
+			current_title.innerText = `${title} - ${artist}`;
+			current_time.innerText = audioFile.currentTime;
+			
+			current_max_time.innerText = duration;
+		} else {
+			audioFile.pause();
+			current_title.innerText = 'Untitled';
+			current_time.innerText = "0:00";
+			
+			current_max_time.innerText = "0:00";
+		}
+	}
+
+	while(!isPlaying(audioFile)){
+		current_time_slider.value = audioFile.currentTime;
+	}
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  for(let sound of sounds){
+    setup_sound(sound)
+  }
+})
+
 const SideBarIcon = ({ icon, classes }) => {
   return (
     <div className="sidebar-icon">
@@ -142,25 +198,17 @@ const Main = () => {
     <div className="fixed right-0 top-0 w-11/12 z-20">
       <div className="fixed top-0 right-0 w-11/12 grid mx-auto py-2 px-4 mb-2 ">
         <TrackHeader />
-        <Track
-          image_url="https://i.scdn.co/image/ab67616d0000b273bd9e9490d5198c41cb85b669"
-          title="Fight Back"
-          artist="Neffex"
-          length="3:16"
-          sound_url="./sounds"
-        />
-        <Track
-          image_url="https://upload.wikimedia.org/wikipedia/en/b/b5/Ascend_Illenium_album.jpg"
-          title="Ascend"
-          artist="Illenium"
-          length="2:87"
-        />
-        <Track
-          image_url="https://upload.wikimedia.org/wikipedia/en/b/b5/Ascend_Illenium_album.jpg"
-          title="Ascend"
-          artist="Illenium"
-          length="2:87"
-        />
+        {sounds.map((item, index) => {
+          return (
+            <Track
+              image_url={item.image_url}
+              title={item.title}
+              artist={item.artist}
+              length={item.duration}
+              sound_url={item.path}
+            />
+          );
+        })}
       </div>
     </div>
   );
