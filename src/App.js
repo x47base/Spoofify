@@ -140,14 +140,12 @@ const Player = () => {
           id="songCurrentlyPlaying"
           className="text-textLight text-base font-medium"
         >
-          Title
+          Untitled
         </span>
         <span
           id="songCurrentTime"
           className="text-textLight text-base font-medium"
-        >
-          1.58
-        </span>
+        >0:00</span>
         <input
           id="songCurrentTimeSlider"
           type="range"
@@ -159,7 +157,7 @@ const Player = () => {
         <span
           id="songLength"
           className="text-textLight text-base font-medium"
-        >2:57</span>
+        >0:00</span>
         <button nameClass="btn">
           <SideBarIcon icon={<BsFillHandThumbsUpFill size="18" />} />
         </button>
@@ -224,7 +222,7 @@ const Track = ({ image_url, title, artist, length, sound_url }) => {
 const Main = () => {
   return (
     <div className="fixed right-0 top-0 w-11/12 z-20">
-      <div className="fixed top-0 right-0 w-11/12 grid mx-auto py-2 px-4 mb-2 ">
+      <div className="fixed top-0 right-0 w-11/12 grid mx-auto py-2 px-4 mb-2">
         <TrackHeader />
         {sounds.map((item, index) => {
           return (
