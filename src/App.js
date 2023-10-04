@@ -16,13 +16,45 @@ import Modal from "./Modal";
 
 /* schema: { title: "", artist: "", duration: "", image_url: "", path: ""} */
 let sounds = [
-	{ title: "Fight Back", artist: "NEFFEX", duration: "3:16", image_url: "https://i.scdn.co/image/ab67616d0000b273bd9e9490d5198c41cb85b669", path: "./sounds/NEFFEX - Fight Back.mp3" },
-  { title: "Best of Me", artist: "NEFFEX", duration: "3:59", image_url: "https://i1.sndcdn.com/artworks-000233271395-45pahr-t500x500.jpg", path: "./sounds/NEFFEX - Best of Me.mp3"},
-  { title: "Never Give Up", artist: "NEFFEX", duration: "4:11", image_url: "https://i1.sndcdn.com/artworks-000237594251-ibzt3b-t500x500.jpg", path: "./sounds/NEFFEX - Never Give Up.mp3"}
+	{ title: "Fight Back", artist: "NEFFEX", duration: 196, image_url: "https://i.scdn.co/image/ab67616d0000b273bd9e9490d5198c41cb85b669", path: "./sounds/NEFFEX - Fight Back.mp3" },
+  { title: "Best of Me", artist: "NEFFEX", duration: 239, image_url: "https://i1.sndcdn.com/artworks-000233271395-45pahr-t500x500.jpg", path: "./sounds/NEFFEX - Best of Me.mp3"},
+  { title: "Never Give Up", artist: "NEFFEX", duration: 251, image_url: "https://i1.sndcdn.com/artworks-000237594251-ibzt3b-t500x500.jpg", path: "./sounds/NEFFEX - Never Give Up.mp3"}
 ]
 var playing = -1;
 
-function isPlaying(sobj) { return !sobj.paused; }
+function sound_length_to_text(duration){
+  let a = (duration / 60).toFixed(2).toString().replace(".",":")
+  return a
+}
+
+let playingInterval;
+
+function startPlaying() {
+  // Your code to start playing the sound
+  playingInterval = setInterval(updateSlider, 1000); // Update the slider every second (adjust the interval as needed)
+}
+
+function stopPlaying() {
+  // Your code to stop playing the sound
+  clearInterval(playingInterval); // Clear the interval when the sound stops
+}
+
+function updateSlider() {
+  let soundElement = sounds[playing];
+  let base = `${soundElement.title.replace(/\s/g, '')}-${soundElement.artist}`;
+  let audioFile = document.getElementById(`sound-${base}`);
+  let current_time = document.getElementById('songCurrentTime')
+  let current_max_time = document.getElementById('songLength')
+  let current_time_slider = document.getElementById('songCurrentTimeSlider')
+  let duration = audioFile.duration;
+
+  if (!isNaN(duration)) {
+    const currentTime = (audioFile.currentTime / duration) * 100;
+    current_time_slider.value = currentTime;
+    current_time.innerText = sound_length_to_text(audioFile.currentTime)
+    current_max_time.innerText = sound_length_to_text(duration)
+  }
+}
 
 function setup_sound(soundElement){
 	let title = soundElement.title;
@@ -48,16 +80,7 @@ function setup_sound(soundElement){
 
 	btn.onclick = function(){
 		if (audioFile.paused == true){
-      if(playing == -1){
-        audioFile.src = path;
-        audioFile.play();
-        btn.children[0].innerHTML = pauseIcon;
-  
-        current_title.innerText = `${title} - ${artist}`;
-        current_time.innerText = audioFile.currentTime;
-        
-        current_max_time.innerText = duration;
-      } else {
+      if(playing != -1){
         let soundElement2 = sounds[playing]
         let base2 = `${soundElement2.title.replace(/\s/g, '')}-${soundElement2.artist}`;
         let btn2 = document.getElementById(`btn-${base2}`);
@@ -65,18 +88,22 @@ function setup_sound(soundElement){
 
         audioFile2.pause();
         btn2.children[0].innerHTML = playIcon;
-        audioFile.src = path;
-        audioFile.play();
-        btn.children[0].innerHTML = pauseIcon;
-  
-        current_title.innerText = `${title} - ${artist}`;
-        current_time.innerText = audioFile.currentTime;
-        
-        current_max_time.innerText = duration;
       }
+
+      audioFile.src = path;
+      audioFile.play();
+      startPlaying()
+      btn.children[0].innerHTML = pauseIcon;
+
+      current_title.innerText = `${title} - ${artist}`;
+      current_time.innerText = audioFile.currentTime;
+      
+      current_max_time.innerText = sound_length_to_text(audioFile.duration);
+
       playing = sounds.indexOf(soundElement)
 		} else {
 			audioFile.pause();
+      stopPlaying()
       btn.children[0].innerHTML = playIcon;
 			current_title.innerText = 'Untitled';
 			current_time.innerText = "0:00";
@@ -96,6 +123,26 @@ document.addEventListener('DOMContentLoaded', function(){
   for(let sound of sounds){
     setup_sound(sound)
   }
+  
+  let current_time_slider = document.getElementById('songCurrentTimeSlider')
+  current_time_slider.addEventListener('input', () => {
+    if(playing != -1){
+      let soundElement = sounds[playing]
+      let base = `${soundElement.title.replace(/\s/g, '')}-${soundElement.artist}`;
+      let btn = document.getElementById(`btn-${base}`);
+      let audioFile = document.getElementById(`sound-${base}`);
+      let percentage = current_time_slider.value;
+      let duration = audioFile.duration;
+  
+      if (!isNaN(duration)) {
+          const currentTime = (percentage / 100) * duration;
+          audioFile.currentTime = currentTime;
+      }
+
+    }
+  })
+
+  // ...
 })
 
 const SideBarIcon = ({ icon, classes }) => {
@@ -230,7 +277,7 @@ const Main = () => {
               image_url={item.image_url}
               title={item.title}
               artist={item.artist}
-              length={item.duration}
+              length={sound_length_to_text(item.duration)}
               sound_url={item.path}
             />
           );
