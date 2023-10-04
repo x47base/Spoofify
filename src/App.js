@@ -4,7 +4,7 @@ import {
   BsFillBookmarksFill,
   BsFillHouseFill,
   BsFillHandThumbsUpFill,
-  BsFillHandThumbsDownFill,
+  BsFillPauseFill,
   BsPlayFill,
   BsFillPlayCircleFill,
   BsFillGearFill,
@@ -20,6 +20,7 @@ let sounds = [
   { title: "Best of Me", artist: "NEFFEX", duration: "3:59", image_url: "https://i1.sndcdn.com/artworks-000233271395-45pahr-t500x500.jpg", path: "./sounds/NEFFEX - Best of Me.mp3"},
   { title: "Never Give Up", artist: "NEFFEX", duration: "4:11", image_url: "https://i1.sndcdn.com/artworks-000237594251-ibzt3b-t500x500.jpg", path: "./sounds/NEFFEX - Never Give Up.mp3"}
 ]
+var playing = -1;
 
 function isPlaying(sobj) { return !sobj.paused; }
 
@@ -42,16 +43,41 @@ function setup_sound(soundElement){
 	let btn = document.getElementById(`btn-${base}`);
 	let audioFile = document.getElementById(`sound-${base}`);
 
+  let playIcon = '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg></div></div>'
+  let pauseIcon = '<div class="sidebar-icon"><div><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"></path></svg></div></div>'
+
 	btn.onclick = function(){
-		if (isPlaying(audioFile)){
-			audioFile.src = path;
-			audioFile.play();
-			current_title.innerText = `${title} - ${artist}`;
-			current_time.innerText = audioFile.currentTime;
-			
-			current_max_time.innerText = duration;
+		if (audioFile.paused == true){
+      if(playing == -1){
+        audioFile.src = path;
+        audioFile.play();
+        btn.children[0].innerHTML = pauseIcon;
+  
+        current_title.innerText = `${title} - ${artist}`;
+        current_time.innerText = audioFile.currentTime;
+        
+        current_max_time.innerText = duration;
+      } else {
+        let soundElement2 = sounds[playing]
+        let base2 = `${soundElement2.title.replace(/\s/g, '')}-${soundElement2.artist}`;
+        let btn2 = document.getElementById(`btn-${base2}`);
+        let audioFile2 = document.getElementById(`sound-${base2}`);
+
+        audioFile2.pause();
+        btn2.children[0].innerHTML = playIcon;
+        audioFile.src = path;
+        audioFile.play();
+        btn.children[0].innerHTML = pauseIcon;
+  
+        current_title.innerText = `${title} - ${artist}`;
+        current_time.innerText = audioFile.currentTime;
+        
+        current_max_time.innerText = duration;
+      }
+      playing = sounds.indexOf(soundElement)
 		} else {
 			audioFile.pause();
+      btn.children[0].innerHTML = playIcon;
 			current_title.innerText = 'Untitled';
 			current_time.innerText = "0:00";
 			
@@ -59,9 +85,11 @@ function setup_sound(soundElement){
 		}
 	}
 
-	while(!isPlaying(audioFile)){
+/*
+	while(audioFile.paused != true){
 		current_time_slider.value = audioFile.currentTime;
 	}
+*/
 }
 
 document.addEventListener('DOMContentLoaded', function(){
