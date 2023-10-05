@@ -17,15 +17,25 @@ import Modal from "./components/Modal";
 
 /* schema: { title: "", artist: "", duration: 0, image_url: "", path: ""} */
 let sounds = [
-  { title: "Invincible", artist: "DEAF KEV", duration: 213, image_url: "https://i1.sndcdn.com/artworks-000224592805-nhfd2x-t500x500.jpg", path: "./sounds/DEAF KEV - Invincible [NCS Release] [J2X5mJ3HDYE].mp3" },
-  { title: "Invisible", artist: "Julius Dreisig & Zeus feat. Crona", duration: 201, image_url: "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/548/1000x0/invisible-1586956245-t2ybbYq7Q8.jpg", path: "./sounds/Julius Dreisig & Zeus X Crona - Invisible [NCS Release] [QglaLzo_aPk].mp3" },
-  { title: "Fight Back", artist: "NEFFEX", duration: 196, image_url: "https://i.scdn.co/image/ab67616d0000b273bd9e9490d5198c41cb85b669", path: "./sounds/Neffex - Fight Back.mp3" },
-  { title: "Best of Me", artist: "NEFFEX", duration: 239, image_url: "https://i1.sndcdn.com/artworks-000233271395-45pahr-t500x500.jpg", path: "./sounds/NEFFEX - Best of Me.mp3" },
-  { title: "Never Give Up", artist: "NEFFEX", duration: 251, image_url: "https://i1.sndcdn.com/artworks-000237594251-ibzt3b-t500x500.jpg", path: "./sounds/NEFFEX - Never Give Up.mp3" },
+  { "title": "Invincible", "artist": "DEAF KEV", "duration": 213, "image_url": "https://i1.sndcdn.com/artworks-000224592805-nhfd2x-t500x500.jpg", "path": "./sounds/DEAF KEV - Invincible [NCS Release] [J2X5mJ3HDYE].mp3" },
+  { "title": "Invisible", "artist": "Julius Dreisig & Zeus feat. Crona", "duration": 201, "image_url": "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/548/1000x0/invisible-1586956245-t2ybbYq7Q8.jpg", "path": "./sounds/Julius Dreisig & Zeus X Crona - Invisible [NCS Release] [QglaLzo_aPk].mp3" },
+  { "title": "Fight Back", "artist": "NEFFEX", "duration": 196, "image_url": "https://i.scdn.co/image/ab67616d0000b273bd9e9490d5198c41cb85b669", "path": "./sounds/Neffex - Fight Back.mp3" },
+  { "title": "Best of Me", "artist": "NEFFEX", "duration": 239, "image_url": "https://i1.sndcdn.com/artworks-000233271395-45pahr-t500x500.jpg", "path": "./sounds/NEFFEX - Best of Me.mp3" },
+  { "title": "Never Give Up", "artist": "NEFFEX", "duration": 251, "image_url": "https://i1.sndcdn.com/artworks-000237594251-ibzt3b-t500x500.jpg", "path": "./sounds/NEFFEX - Never Give Up.mp3" }  
+]
 
-];
 var playing = -1;
 var volume = 0.0;
+
+let song_likes = [];
+let song_saves = [];
+
+function removeLike(index){
+	song_likes = song_likes.filter(function(id) {return id !== index;});
+}
+function removeSave(index){
+	song_saves = song_saves.filter(function(id) {return id !== index;});
+}
 
 function sound_length_to_text(duration) {
   let a = duration
@@ -272,6 +282,42 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   })
 
+  document.getElementById('curentLiked').addEventListener('click', function(){
+    let btnLike = document.getElementById('curentLiked')
+    // Yes
+    let likedIcon = '<div class="sidebar-icon"><div class="text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a9.84 9.84 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733.058.119.103.242.138.363.077.27.113.567.113.856 0 .289-.036.586-.113.856-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.163 3.163 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.82 4.82 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z"></path></svg></div></div>'
+    // No
+    let likeIcon = '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a9.84 9.84 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733.058.119.103.242.138.363.077.27.113.567.113.856 0 .289-.036.586-.113.856-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.163 3.163 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.82 4.82 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z"></path></svg></div></div>'
+
+    if(playing != -1){
+      if (song_likes.includes(playing)){
+        removeLike(playing);
+        btnLike.children[0].innerHTML = likeIcon;
+      } else {
+        song_likes.push(playing);
+        btnLike.children[0].innerHTML = likedIcon;
+      }
+    }
+  })
+
+  document.getElementById('currentSaved').addEventListener('click', function(){
+    let btnSave = document.getElementById('currentSaved')
+    //Yes
+    let savedIcon = '<div class="sidebar-icon"><div class="text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"></path></svg></div></div>'
+    //No
+    let saveIcon = '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"></path></svg></div></div>'
+
+    if(playing != -1){
+      if (song_saves.includes(playing)){
+        removeSave(playing);
+        btnSave.children[0].innerHTML = saveIcon;
+      } else {
+        song_saves.push(playing);
+        btnSave.children[0].innerHTML = savedIcon;
+      }
+    }
+  })
+
   // ...
 });
 
@@ -360,10 +406,10 @@ const Player = () => {
         <div></div>
         <div className="flex flex-row gap-2 justify-center items-center">
           <button id="curentLiked">
-            <SideBarIcon icon={<BsFillHandThumbsUpFill size="18" />} />
+            <SideBarIcon icon={<BsFillHandThumbsUpFill size="18"/>} classes="text-white hover:text-green-500" />
           </button>
           <button id="currentSaved">
-            <SideBarIcon icon={<BsFillBookmarkFill size="18" />} classes="" />
+            <SideBarIcon icon={<BsFillBookmarkFill size="18" />} classes="text-white hover:text-green-500" />
           </button>
           <input
             id="songCurrentVolume"
@@ -382,11 +428,7 @@ const Player = () => {
               updateVolumeIcon(current_value)
             }}
           />
-          <button id="currentVolume"
-          onclick={() => {
-
-          }}
-          >
+          <button id="currentVolume">
             <SideBarIcon icon={<BsFillVolumeUpFill size="18" />} classes="" />
           </button>
         </div>
@@ -454,7 +496,7 @@ const Track = ({ image_url, title, artist, length, sound_url }) => {
 const Main = () => {
   return (
     <div className="right-0 top-0 w-11/12 z-0">
-      <div className="tracks-container fixed top-0 right-0 w-11/12 h-[42.4rem] overflow-y-auto mx-auto py-2 px-4 mb-6">
+      <div className="tracks-container fixed top-0 right-0 w-11/12 max-h-[42.4rem] h-screen overflow-y-auto mx-auto py-2 px-4 mb-6">
         <TrackHeader />
         {sounds.map((item, index) => {
           return (
