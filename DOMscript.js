@@ -1,0 +1,35 @@
+/*
+import {
+	BsPlayFill,
+	BsFillPauseFill
+} from "react-icons/bs";
+import { TiImageOutline } from "react-icons/ti";
+  
+const SideBarIcon = ({ icon, classes }) => {
+	return (
+	  <div className="sidebar-icon">
+		<div className={classes}>{icon}</div>
+	  </div>
+	);
+};
+*/
+
+function remove_other() {
+	document.querySelector('.active-tab').classList.remove('active-tab')
+}
+
+
+document.addEventListener('DOMContentLoaded', function(){
+	
+	document.querySelectorAll('.sidebar__link').forEach(element => {
+		element.addEventListener('click',function(){
+			remove_other()
+			element.children[0].classList.add('active-tab')
+		})
+	})
+
+	document.querySelectorAll('.modal-btn')[0].addEventListener('click',function(){
+		document.querySelectorAll('.modal')[0].remove()
+	})
+
+})
