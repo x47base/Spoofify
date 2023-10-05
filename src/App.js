@@ -5,15 +5,17 @@ import {
   BsFillHouseFill,
   BsFillHandThumbsUpFill,
   BsPlayFill,
-  BsFillPlayCircleFill,
   BsFillGearFill,
   BsFillVolumeUpFill
 } from "react-icons/bs";
-import { TiImageOutline } from "react-icons/ti";
 import "./App.css";
 
 import Form from "./components/Form";
 import Modal from "./components/Modal";
+import Track from './components/Track';
+import TrackHeader from './components/TrackHeader';
+import SideBarIcon from './components/SideBarIcon';
+import Main from './pages/Main';
 
 /* schema: { title: "", artist: "", duration: 0, image_url: "", path: ""} */
 let sounds = [
@@ -88,6 +90,23 @@ function updateSlider() {
     current_time.innerText = sound_length_to_text(audioFile.currentTime);
     current_max_time.innerText = sound_length_to_text(duration);
   }
+
+  if(audioFile.currentTime == duration){
+    if(playing != (sounds.length-1)){
+      play_next_song()
+    } else if (playing != -1 && playing == (sounds.length-1)) {
+      let playIcon =
+  '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg></div></div>';
+  
+      let soundElement = sounds[playing]
+
+      let base = `${soundElement.title.replace(/\s/g, "")}-${soundElement.artist}`;
+      let btn = document.getElementById(`btn-${base}`);
+      let audioFile = document.getElementById(`sound-${base}`);
+      audioFile.pause()
+      btn.children[0].innerHTML = playIcon;   
+    }
+  }
 }
 
 function updateVolumeIcon(vol) {
@@ -142,7 +161,7 @@ function setup_sound(soundElement) {
         let btn2 = document.getElementById(`btn-${base2}`);
         let audioFile2 = document.getElementById(`sound-${base2}`);
         
-        if(current_image == soundElement.image_url){
+        if(current_image.src == soundElement.image_url){
           audioFile2.play()
 
           btn2.children[0].innerHTML = pauseIcon;
@@ -182,9 +201,90 @@ function setup_sound(soundElement) {
 */
 }
 
-function start_song(index){
-  
+function play_next_song() {
+  let current_time_slider = document.getElementById("songCurrentTimeSlider");
+  let player_btn = document.getElementById('player-play-btn');
+
+  let playIcon =
+    '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg></div></div>';
+  let pauseIcon =
+    '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"></path></svg></div></div>';
+
+  if (playing < (sounds.length - 1) && playing != -1) {
+    let prebase = `${sounds[playing].title.replace(/\s/g, "")}-${sounds[playing].artist}`;
+    let prebtn = document.getElementById(`btn-${prebase}`);
+    prebtn.children[0].innerHTML = playIcon;
+    playing += 1;
+  } else if (playing == -1) {
+    playing = 0;
+  }
+
+  let soundElement = sounds[playing];
+
+  let base = `${soundElement.title.replace(/\s/g, "")}-${soundElement.artist}`;
+  let btn = document.getElementById(`btn-${base}`);
+  let audioFile = document.getElementById(`sound-${base}`);
+
+  if (audioFile.paused || audioFile.ended) {
+    audioFile.src = soundElement.path;
+    audioFile.currentTime = 0;
+    audioFile.play();
+
+    player_btn.children[0].innerHTML = pauseIcon;
+    btn.children[0].innerHTML = pauseIcon;
+
+    let current_image = document.getElementById("songImagePlaying");
+    let current_title = document.getElementById("songCurrentlyPlaying");
+    current_image.src = soundElement.image_url;
+    current_title.innerText = `${soundElement.title} - ${soundElement.artist}`;
+  }
 }
+/*
+
+function play_next_song(){
+  let current_image = document.getElementById("songImagePlaying");
+  let current_title = document.getElementById("songCurrentlyPlaying");
+  let current_time = document.getElementById("songCurrentTime");
+  let current_time_slider = document.getElementById("songCurrentTimeSlider");
+  let current_max_time = document.getElementById("songLength");
+  let player_btn = document.getElementById('player-play-btn');
+
+  let playIcon =
+  '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg></div></div>';
+  let pauseIcon =
+  '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"></path></svg></div></div>';
+
+  if(playing < (sounds.length-1) && playing != -1){
+    let prebase = `${sounds[playing].title.replace(/\s/g, "")}-${sounds[playing].artist}`;
+    let prebtn = document.getElementById(`btn-${prebase}`);
+    prebtn.children[0].innerHTML = playIcon;
+    playing += 1
+  } else if (playing == -1){
+    playing = 0
+  }
+
+  let soundElement = sounds[playing]
+
+  let base = `${soundElement.title.replace(/\s/g, "")}-${soundElement.artist}`;
+  let btn = document.getElementById(`btn-${base}`);
+  let audioFile = document.getElementById(`sound-${base}`);
+  
+  if(current_image.src == soundElement.image_url){
+    audioFile.play()
+
+    btn.children[0].innerHTML = pauseIcon;
+    player_btn.children[0].innerHTML = pauseIcon;
+    
+  } else {
+    audioFile.pause();
+    btn.children[0].innerHTML = playIcon;
+  }
+
+  audioFile.play();
+  player_btn.children[0].innerHTML = pauseIcon;
+  btn.children[0].innerHTML = pauseIcon;
+}
+*/
 
 document.addEventListener("DOMContentLoaded", function () {
   for (let sound of sounds) {
@@ -321,14 +421,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // ...
 });
 
-const SideBarIcon = ({ icon, classes }) => {
-  return (
-    <div className="sidebar-icon">
-      <div className={classes}>{icon}</div>
-    </div>
-  );
-};
-
 const SideBar = () => {
   return (
     <div className="sidebar z-20 fixed top-0 left-0 w-1/12 h-screen bg-neutral-900 flex flex-col">
@@ -437,83 +529,6 @@ const Player = () => {
   );
 };
 
-const TrackHeader = () => {
-  return (
-    <div className="trackHeader mx-auto rounded-sm transition-colors hover:bg-hover cursor-pointer w-full text-left">
-      <div className="grid grid-cols-[auto,1fr,1fr,auto] gap-2 p-2 border-b-[1px] border-border mb-2 items-center">
-        <div className="flex col-span-1 justify-evenly">
-          <SideBarIcon
-            icon={<BsFillPlayCircleFill size="20" />}
-            classes="text-white"
-          />
-          <SideBarIcon
-            icon={<TiImageOutline size="25" />}
-            classes="pl-[7px] col-span-1 ml-2"
-          />
-        </div>
-        <span className="text-white">TITLE</span>
-        <span className="text-white">ARTIST</span>
-        <span className="text-white">
-          <SideBarIcon icon={<BsClock size="18px" />} classes="" />
-        </span>
-      </div>
-    </div>
-  );
-};
-
-const Track = ({ image_url, title, artist, length, sound_url }) => {
-  return (
-    <div className="track mx-auto rounded-sm transition-colors hover:bg-hover cursor-pointer hover:text-hover w-full text-left">
-      <div className="grid grid-cols-[auto,1fr,1fr,auto] gap-2 p-2 items-center">
-        <div className="flex col-span-1 justify-evenly">
-          <button
-            className="btn"
-            id={`btn-${title.replace(/\s/g, "")}-${artist}`}
-          >
-            <SideBarIcon
-              icon={<BsPlayFill size="20" />}
-              classes="text-white hover:text-green-500"
-            />
-          </button>
-          <img
-            src={image_url}
-            alt="track img"
-            className="w-[40px] h-[40px] ml-2"
-          />
-        </div>
-        <span className="text-white">{title}</span>
-        <span className="text-white">{artist}</span>
-        <span className="text-white">{length}</span>
-        <audio
-          id={`sound-${title.replace(/\s/g, "")}-${artist}`}
-          src={sound_url}
-        />
-      </div>
-    </div>
-  );
-};
-
-const Main = () => {
-  return (
-    <div className="right-0 top-0 w-11/12 z-0">
-      <div className="tracks-container fixed top-0 right-0 w-11/12 max-h-[42.4rem] h-screen overflow-y-auto mx-auto py-2 px-4 mb-6">
-        <TrackHeader />
-        {sounds.map((item, index) => {
-          return (
-            <Track
-              image_url={item.image_url}
-              title={item.title}
-              artist={item.artist}
-              length={sound_length_to_text(item.duration)}
-              sound_url={item.path}
-            />
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
 
 /*
 function Footer() {
@@ -545,7 +560,7 @@ function App() {
       <div className="App">
         <SideBar />
         <Player />
-        <Main />
+        <Main sounds={sounds} sound_length_to_text={sound_length_to_text}/>
       </div>
     </div>
   );
