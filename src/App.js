@@ -92,19 +92,8 @@ function updateSlider() {
   }
 
   if(audioFile.currentTime == duration){
-    if(playing != (sounds.length-1)){
+    if((playing+1) != (sounds.length-1)){
       play_next_song()
-    } else if (playing != -1 && playing == (sounds.length-1)) {
-      let playIcon =
-  '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg></div></div>';
-  
-      let soundElement = sounds[playing]
-
-      let base = `${soundElement.title.replace(/\s/g, "")}-${soundElement.artist}`;
-      let btn = document.getElementById(`btn-${base}`);
-      let audioFile = document.getElementById(`sound-${base}`);
-      audioFile.pause()
-      btn.children[0].innerHTML = playIcon;   
     }
   }
 }
@@ -418,6 +407,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   })
 
+  document.getElementById('songCurrentVolume').addEventListener('input', function(event) {
+    let current_value = (event.target.value / 100);
+    volume = current_value
+    if(playing != -1){
+      set_volume_of_current_song()
+    }
+    updateVolumeIcon(current_value)
+  })
+
   // ...
 });
 
@@ -511,14 +509,7 @@ const Player = () => {
             step="10"
             defaultValue="100"
             className=" cursor-pointer"
-            onInput={(event) => {
-              let current_value = (event.target.value / 100);
-              volume = current_value
-              if(playing != -1){
-                set_volume_of_current_song()
-              }
-              updateVolumeIcon(current_value)
-            }}
+
           />
           <button id="currentVolume">
             <SideBarIcon icon={<BsFillVolumeUpFill size="18" />} classes="" />
