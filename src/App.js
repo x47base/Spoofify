@@ -27,8 +27,21 @@ let sounds = [
 var playing = -1;
 
 function sound_length_to_text(duration) {
-  let a = (duration / 60).toFixed(2).toString().replace(".", ":");
-  return a;
+  let a = duration
+  let b = 0
+  while(a>0){
+    a -= 60
+    b += 1
+  }
+  if(a<0){
+    a += 60
+    b -=1
+  }
+  if(a >= 0 && a <= 9){
+    return `${b}:0${a}`;
+  } else {
+    return `${b}:${a}`;
+  }
 }
 
 let playingInterval;
