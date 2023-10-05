@@ -92,7 +92,7 @@ function updateSlider() {
   }
 
   if(audioFile.currentTime == duration){
-    if((playing+1) != (sounds.length-1)){
+    if(playing != (sounds.length-1)){
       play_next_song()
     }
   }
