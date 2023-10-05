@@ -168,6 +168,10 @@ function setup_sound(soundElement) {
 */
 }
 
+function start_song(index){
+  
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   for (let sound of sounds) {
     setup_sound(sound);
