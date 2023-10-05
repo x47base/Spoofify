@@ -79,6 +79,7 @@ function updateSlider() {
   let soundElement = sounds[playing];
   let base = `${soundElement.title.replace(/\s/g, "")}-${soundElement.artist}`;
   let audioFile = document.getElementById(`sound-${base}`);
+  let current_image = document.getElementById("songImagePlaying");
   let current_time = document.getElementById("songCurrentTime");
   let current_max_time = document.getElementById("songLength");
   let current_time_slider = document.getElementById("songCurrentTimeSlider");
@@ -98,10 +99,12 @@ function setup_sound(soundElement) {
   let duration = soundElement.duration;
   let path = soundElement.path;
 
+  let current_image = document.getElementById("songImagePlaying");
   let current_title = document.getElementById("songCurrentlyPlaying");
   let current_time = document.getElementById("songCurrentTime");
   let current_time_slider = document.getElementById("songCurrentTimeSlider");
   let current_max_time = document.getElementById("songLength");
+  let player_btn = document.getElementById('player-play-btn');
 
   if (path == undefined) {
     path = `${artist} - ${title}.mp3`;
@@ -114,27 +117,36 @@ function setup_sound(soundElement) {
   let playIcon =
     '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg></div></div>';
   let pauseIcon =
-    '<div class="sidebar-icon"><div><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"></path></svg></div></div>';
+    '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"></path></svg></div></div>';
 
   btn.onclick = function () {
     if (audioFile.paused == true) {
       if (playing != -1) {
         let soundElement2 = sounds[playing];
-        let base2 = `${soundElement2.title.replace(/\s/g, "")}-${
-          soundElement2.artist
-        }`;
+        let base2 = `${soundElement2.title.replace(/\s/g, "")}-${soundElement2.artist}`;
         let btn2 = document.getElementById(`btn-${base2}`);
         let audioFile2 = document.getElementById(`sound-${base2}`);
+        
+        if(current_image == soundElement.image_url){
+          audioFile2.play()
 
-        audioFile2.pause();
-        btn2.children[0].innerHTML = playIcon;
+          btn2.children[0].innerHTML = pauseIcon;
+          player_btn.children[0].innerHTML = pauseIcon;
+          
+
+        } else {
+          audioFile2.pause();
+          btn2.children[0].innerHTML = playIcon;
+        }
       }
 
       audioFile.src = path;
       audioFile.play();
       startPlaying();
       btn.children[0].innerHTML = pauseIcon;
+      player_btn.children[0].innerHTML = pauseIcon;
 
+      current_image.src = soundElement.image_url
       current_title.innerText = `${title} - ${artist}`;
       current_time.innerText = audioFile.currentTime;
 
@@ -145,10 +157,7 @@ function setup_sound(soundElement) {
       audioFile.pause();
       stopPlaying();
       btn.children[0].innerHTML = playIcon;
-      current_title.innerText = "Untitled";
-      current_time.innerText = "0:00";
-
-      current_max_time.innerText = "0:00";
+      player_btn.children[0].innerHTML = playIcon;
     }
   };
 
@@ -163,6 +172,68 @@ document.addEventListener("DOMContentLoaded", function () {
   for (let sound of sounds) {
     setup_sound(sound);
   }
+
+  let player_btn = document.getElementById('player-play-btn');
+  player_btn.addEventListener('click', function(){
+    let current_image = document.getElementById("songImagePlaying");
+    let current_title = document.getElementById("songCurrentlyPlaying");
+    let current_time = document.getElementById("songCurrentTime");
+    let current_time_slider = document.getElementById("songCurrentTimeSlider");
+    let current_max_time = document.getElementById("songLength");
+
+    let playIcon =
+    '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg></div></div>';
+  let pauseIcon =
+    '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"></path></svg></div></div>';
+
+
+    if (playing == -1) {
+      playing = 0
+      let soundElement = sounds[playing];
+      let base = `${soundElement.title.replace(/\s/g, "")}-${soundElement.artist}`;
+      let btn = document.getElementById(`btn-${base}`);
+      let audioFile = document.getElementById(`sound-${base}`);
+
+      let path = soundElement.path;
+
+      audioFile.src = path;
+      audioFile.play();
+      startPlaying();
+      btn.children[0].innerHTML = pauseIcon;
+      player_btn.children[0].innerHTML = pauseIcon;
+
+      current_image.src = soundElement.image_url
+      current_title.innerText = `${soundElement.title} - ${soundElement.artist}`;
+      current_time.innerText = audioFile.currentTime;
+
+      current_max_time.innerText = sound_length_to_text(audioFile.duration);
+
+      playing = sounds.indexOf(soundElement);
+    } else {
+      if (player_btn.children[0].innerHTML == playIcon){
+        let soundElement = sounds[playing]
+
+        let base = `${soundElement.title.replace(/\s/g, "")}-${soundElement.artist}`;
+        let btn = document.getElementById(`btn-${base}`);
+        let audioFile = document.getElementById(`sound-${base}`);
+  
+        audioFile.play();
+        player_btn.children[0].innerHTML = pauseIcon;
+        btn.children[0].innerHTML = pauseIcon;
+      } else {
+        let soundElement = sounds[playing]
+
+        let base = `${soundElement.title.replace(/\s/g, "")}-${soundElement.artist}`;
+        let btn = document.getElementById(`btn-${base}`);
+        let audioFile = document.getElementById(`sound-${base}`);
+  
+        audioFile.pause();
+        player_btn.children[0].innerHTML = playIcon;
+        btn.children[0].innerHTML = playIcon;
+      }
+    }
+
+  })
 
   let current_time_slider = document.getElementById("songCurrentTimeSlider");
   current_time_slider.addEventListener("input", () => {
@@ -231,37 +302,51 @@ const SideBar = () => {
 
 const Player = () => {
   return (
-    <div className="player fixed bottom-0 right-0 p-3 h-12 w-11/12 bg-neutral-800 justify-center items-center">
-      <div id="player-container" className="flex flex-row justify-center gap-4">
-        <span
-          id="songCurrentlyPlaying"
-          className="text-textLight text-base font-medium"
-        >
-          Untitled
-        </span>
-        <span
-          id="songCurrentTime"
-          className="text-textLight text-base font-medium"
-        >
-          0:00
-        </span>
-        <input
-          id="songCurrentTimeSlider"
-          type="range"
-          max="100"
-          defaultValue="100"
-          className="cursor-pointer"
-          onChange={() => {}}
-        />
-        <span id="songLength" className="text-textLight text-base font-medium">
-          0:00
-        </span>
-        <button nameClass="btn">
-          <SideBarIcon icon={<BsFillHandThumbsUpFill size="18" />} />
-        </button>
-        <button nameClass="btn">
-          <SideBarIcon icon={<BsFillBookmarkFill size="18" />} classes="" />
-        </button>
+    <div className="player fixed bottom-0 right-0 p-3 h-16 w-11/12 bg-neutral-800 justify-center items-center">
+      <div id="player-container" className="grid grid-cols-[auto,1fr,1fr,auto] text-left justify-center items-center gap-4">
+        <div className="flex flex-row gap-2 justify-center items-center">
+          <img id="songImagePlaying" className="no-image"/>
+          <span
+            id="songCurrentlyPlaying"
+            className="text-textLight text-base font-medium w-[420px]"
+          >
+            Untitled
+          </span>
+        </div>
+        <div className="flex flex-row gap-2 justify-center items-center">
+          <button id="player-play-btn">
+            <SideBarIcon
+              icon={<BsPlayFill size="20" />}
+              classes="text-white hover:text-green-500"
+            />
+          </button>
+          <span
+            id="songCurrentTime"
+            className="text-textLight text-base font-medium"
+          >
+            0:00
+          </span>
+          <input
+            id="songCurrentTimeSlider"
+            type="range"
+            max="100"
+            defaultValue="100"
+            className="cursor-pointer"
+            onChange={() => {}}
+          />
+          <span id="songLength" className="text-textLight text-base font-medium">
+            0:00
+          </span>
+        </div>
+        <div></div>
+        <div className="flex flex-row gap-2 justify-center items-center">
+          <button nameClass="btn">
+            <SideBarIcon icon={<BsFillHandThumbsUpFill size="18" />} />
+          </button>
+          <button nameClass="btn">
+            <SideBarIcon icon={<BsFillBookmarkFill size="18" />} classes="" />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -269,8 +354,8 @@ const Player = () => {
 
 const TrackHeader = () => {
   return (
-    <div nameClass="trackHeader flex flex-row mx-auto rounded-sm transition-colors hover:bg-hover cursor-pointer">
-      <div className="flex flex-row justify-between p-2 border-b-[1px] border-border mb-2 itmes-center">
+    <div className="trackHeader mx-auto rounded-sm transition-colors hover:bg-hover cursor-pointer w-full text-left">
+      <div className="grid grid-cols-[auto,1fr,1fr,auto] gap-2 p-2 border-b-[1px] border-border mb-2 items-center">
         <div className="flex col-span-1 justify-evenly">
           <SideBarIcon
             icon={<BsFillPlayCircleFill size="20" />}
@@ -293,11 +378,11 @@ const TrackHeader = () => {
 
 const Track = ({ image_url, title, artist, length, sound_url }) => {
   return (
-    <div nameClass="track flex flex-row mx-auto rounded-sm transition-colors hover:bg-hover cursor-pointer hover:text-hover">
-      <div className="flex flex-row justify-between p-2 items-center">
+    <div className="track mx-auto rounded-sm transition-colors hover:bg-hover cursor-pointer hover:text-hover w-full text-left">
+      <div className="grid grid-cols-[auto,1fr,1fr,auto] gap-2 p-2 items-center">
         <div className="flex col-span-1 justify-evenly">
           <button
-            nameClass="btn"
+            className="btn"
             id={`btn-${title.replace(/\s/g, "")}-${artist}`}
           >
             <SideBarIcon
@@ -308,7 +393,7 @@ const Track = ({ image_url, title, artist, length, sound_url }) => {
           <img
             src={image_url}
             alt="track img"
-            className="col-span-1 w-[40px] h-[40px] ml-2"
+            className="w-[40px] h-[40px] ml-2"
           />
         </div>
         <span className="text-white">{title}</span>
@@ -326,7 +411,7 @@ const Track = ({ image_url, title, artist, length, sound_url }) => {
 const Main = () => {
   return (
     <div className="fixed right-0 top-0 w-11/12 z-20">
-      <div className="fixed top-0 right-0 w-11/12 grid mx-auto py-2 px-4 mb-2">
+      <div className="tracks-container fixed top-0 right-0 w-11/12 mx-auto py-2 px-4 mb-2">
         <TrackHeader />
         {sounds.map((item, index) => {
           return (
@@ -343,6 +428,7 @@ const Main = () => {
     </div>
   );
 };
+
 
 /*
 function Footer() {

@@ -3,6 +3,13 @@
   z-index: 2;
 }
 
+.no-image{
+  width: 2.25rem;
+  height: 2.25rem;
+  background-color: #919191;
+  border: none;
+}
+
 .track,
 .trackHeader {
   z-index: 1;
