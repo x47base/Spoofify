@@ -30,19 +30,17 @@ function sound_length_to_text(duration){
 let playingInterval;
 
 function startPlaying() {
-  // Your code to start playing the sound
-  playingInterval = setInterval(updateSlider, 1000); // Update the slider every second (adjust the interval as needed)
+  playingInterval = setInterval(updateSlider, 1000);
 }
 
 function stopPlaying() {
-  // Your code to stop playing the sound
-  clearInterval(playingInterval); // Clear the interval when the sound stops
+  clearInterval(playingInterval);
 }
 
 function updateSlider() {
   let soundElement = sounds[playing];
   let base = `${soundElement.title.replace(/\s/g, '')}-${soundElement.artist}`;
-  let audioFile = document.getElementById(`sound-${base}`);
+	let audioFile = document.getElementById(`sound-${base}`);
   let current_time = document.getElementById('songCurrentTime')
   let current_max_time = document.getElementById('songLength')
   let current_time_slider = document.getElementById('songCurrentTimeSlider')
