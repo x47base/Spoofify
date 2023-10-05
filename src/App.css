@@ -1,3 +1,8 @@
+#songCurrentVolume {
+  display: none;
+  transform: rotate(180deg); /*translateX(55%) translateY(540%)*/
+}
+
 .sidebar,
 .player {
   z-index: 2;

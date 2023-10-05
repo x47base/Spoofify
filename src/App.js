@@ -4,10 +4,10 @@ import {
   BsFillBookmarksFill,
   BsFillHouseFill,
   BsFillHandThumbsUpFill,
-  BsFillPauseFill,
   BsPlayFill,
   BsFillPlayCircleFill,
   BsFillGearFill,
+  BsFillVolumeUpFill
 } from "react-icons/bs";
 import { TiImageOutline } from "react-icons/ti";
 import "./App.css";
@@ -25,6 +25,7 @@ let sounds = [
 
 ];
 var playing = -1;
+var volume = 0.0;
 
 function sound_length_to_text(duration) {
   let a = duration
@@ -38,10 +39,17 @@ function sound_length_to_text(duration) {
     b -=1
   }
   if(a >= 0 && a <= 9){
-    return `${b}:0${a}`;
+    return `${b}:0${a.toFixed(0)}`;
   } else {
-    return `${b}:${a}`;
+    return `${b}:${a.toFixed(0)}`;
   }
+}
+
+function set_volume_of_current_song() {
+  let soundElement = sounds[playing];
+  let base = `${soundElement.title.replace(/\s/g, "")}-${soundElement.artist}`;
+  let audioFile = document.getElementById(`sound-${base}`);
+  audioFile.volume = volume;
 }
 
 let playingInterval;
@@ -69,6 +77,24 @@ function updateSlider() {
     current_time_slider.value = currentTime;
     current_time.innerText = sound_length_to_text(audioFile.currentTime);
     current_max_time.innerText = sound_length_to_text(duration);
+  }
+}
+
+function updateVolumeIcon(vol) {
+  let iconElement = document.getElementById('currentVolume').children[0]
+  let full_volume_icon = '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"></path><path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"></path><path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"></path></svg></div></div>'
+  let down_volume_icon = '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12V4zm3.025 4a4.486 4.486 0 0 1-1.318 3.182L10 10.475A3.489 3.489 0 0 0 11.025 8 3.49 3.49 0 0 0 10 5.525l.707-.707A4.486 4.486 0 0 1 12.025 8z"></path></svg></div></div>'
+  let low_volume_icon  = '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M10.717 3.55A.5.5 0 0 1 11 4v8a.5.5 0 0 1-.812.39L7.825 10.5H5.5A.5.5 0 0 1 5 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"></path></svg></div></div>'
+  let mute_volume_icon = '<div class="sidebar-icon"><div class="text-white hover:text-green-500"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="18" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zm7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z"></path></svg></div></div>'
+  
+  if (vol == 1.0 || vol == 0.9){
+    iconElement.innerHTML = full_volume_icon
+  } else if ( vol < 0.9 && vol >= 0.4) {
+    iconElement.innerHTML = down_volume_icon
+  } else if ( vol >= 0.1 && vol <=0.3) {
+    iconElement.innerHTML = low_volume_icon
+  } else {
+    iconElement.innerHTML = mute_volume_icon
   }
 }
 
@@ -112,7 +138,6 @@ function setup_sound(soundElement) {
           btn2.children[0].innerHTML = pauseIcon;
           player_btn.children[0].innerHTML = pauseIcon;
           
-
         } else {
           audioFile2.pause();
           btn2.children[0].innerHTML = playIcon;
@@ -127,7 +152,7 @@ function setup_sound(soundElement) {
 
       current_image.src = soundElement.image_url
       current_title.innerText = `${title} - ${artist}`;
-      current_time.innerText = audioFile.currentTime;
+      current_time.innerText = sound_length_to_text(audioFile.currentTime);
 
       current_max_time.innerText = sound_length_to_text(audioFile.duration);
 
@@ -187,7 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       current_image.src = soundElement.image_url
       current_title.innerText = `${soundElement.title} - ${soundElement.artist}`;
-      current_time.innerText = audioFile.currentTime;
+      current_time.innerText = sound_length_to_text(audioFile.currentTime);
 
       current_max_time.innerText = sound_length_to_text(audioFile.duration);
 
@@ -236,6 +261,16 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   });
+
+
+  document.getElementById('currentVolume').addEventListener('click', function(){
+    let display = document.querySelector('#songCurrentVolume').style['display']
+    if (display == 'block'){
+      document.querySelector('#songCurrentVolume').style= "display: none"; 
+    } else {
+      document.querySelector('#songCurrentVolume').style= "display: block"; 
+    }
+  })
 
   // ...
 });
@@ -312,6 +347,7 @@ const Player = () => {
           <input
             id="songCurrentTimeSlider"
             type="range"
+            min="0"
             max="100"
             defaultValue="100"
             className="cursor-pointer"
@@ -323,11 +359,35 @@ const Player = () => {
         </div>
         <div></div>
         <div className="flex flex-row gap-2 justify-center items-center">
-          <button nameClass="btn">
+          <button id="curentLiked">
             <SideBarIcon icon={<BsFillHandThumbsUpFill size="18" />} />
           </button>
-          <button nameClass="btn">
+          <button id="currentSaved">
             <SideBarIcon icon={<BsFillBookmarkFill size="18" />} classes="" />
+          </button>
+          <input
+            id="songCurrentVolume"
+            type="range"
+            min="0"
+            max="100"
+            step="10"
+            defaultValue="100"
+            className=" cursor-pointer"
+            onInput={(event) => {
+              let current_value = (event.target.value / 100);
+              volume = current_value
+              if(playing != -1){
+                set_volume_of_current_song()
+              }
+              updateVolumeIcon(current_value)
+            }}
+          />
+          <button id="currentVolume"
+          onclick={() => {
+
+          }}
+          >
+            <SideBarIcon icon={<BsFillVolumeUpFill size="18" />} classes="" />
           </button>
         </div>
       </div>
