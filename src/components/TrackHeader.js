@@ -8,7 +8,7 @@ import './TrackHeader.css';
 
 export default function TrackHeader() {
     return (
-      <div className="trackHeader mx-auto rounded-sm transition-colors hover:bg-hover cursor-pointer w-full text-left">
+      <div className="trackHeader mx-auto rounded-sm transition-colors hover:bg-hover cursor-default w-full text-left">
         <div className="grid grid-cols-[auto,1fr,1fr,auto] gap-2 p-2 border-b-[1px] border-border mb-2 items-center">
           <div className="flex col-span-1 justify-evenly">
             <SideBarIcon
