@@ -12,6 +12,7 @@ import {
 import { TiImageOutline } from "react-icons/ti";
 import "./App.css";
 
+import Form from "./Form";
 import Modal from "./Modal";
 
 /* schema: { title: "", artist: "", duration: 0, image_url: "", path: ""} */
@@ -300,7 +301,14 @@ function Footer() {
 function App() {
   return (
     <div>
-      <Modal title="Welcome" description="Welcome to Spoofify! The #1 Music Platform." button_text="Start"/>
+      <Modal title="Welcome" description="Welcome to Spoofify! The #1 Music Platform."/>
+      <Form title="Create Account" submit_text="Register"
+        inputs = {[
+          { type: "text", name: "p-fname", placeholder: "Vorname" },
+          { type: "email", name: "p-email", placeholder: "example@gmail.com" },
+          { type: "number", name: "p-age", placeholder: "Alter" },
+
+        ]}/>
 
       <div className="App">
         <SideBar />
