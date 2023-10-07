@@ -27,7 +27,7 @@ let sounds = [
 ]
 
 var playing = -1;
-var volume = 0.0;
+var volume = 1.0;
 
 let song_likes = [];
 let song_saves = [];
@@ -151,6 +151,7 @@ function setup_sound(soundElement) {
         let audioFile2 = document.getElementById(`sound-${base2}`);
         
         if(current_image.src == soundElement.image_url){
+          audioFile2.volume = volume
           audioFile2.play()
 
           btn2.children[0].innerHTML = pauseIcon;
@@ -161,7 +162,7 @@ function setup_sound(soundElement) {
           btn2.children[0].innerHTML = playIcon;
         }
       }
-
+      audioFile.volume = volume
       audioFile.src = path;
       audioFile.play();
       startPlaying();
@@ -220,6 +221,7 @@ function play_next_song() {
   if (audioFile.paused || audioFile.ended) {
     audioFile.src = soundElement.path;
     audioFile.currentTime = 0;
+    audioFile.volume = volume
     audioFile.play();
 
     player_btn.children[0].innerHTML = pauseIcon;
@@ -307,6 +309,7 @@ document.addEventListener("DOMContentLoaded", function () {
       let path = soundElement.path;
 
       audioFile.src = path;
+      audioFile.volume = volume
       audioFile.play();
       startPlaying();
       btn.children[0].innerHTML = pauseIcon;
@@ -327,6 +330,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let btn = document.getElementById(`btn-${base}`);
         let audioFile = document.getElementById(`sound-${base}`);
   
+        audioFile.volume = volume
         audioFile.play();
         player_btn.children[0].innerHTML = pauseIcon;
         btn.children[0].innerHTML = pauseIcon;
