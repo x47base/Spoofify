@@ -9,3 +9,8 @@ We needed to make a page design with a navbar, a list of songs, album covers and
 
 ## Showcase
 [https://www.youtube.com/watch?v=CfCZPNMv8r0](https://www.youtube.com/watch?v=CfCZPNMv8r0)
+![grafik](https://github.com/x47base/Spoofify/assets/72315013/787655e4-5061-4908-96d4-4cde93427eaf)
+![grafik](https://github.com/x47base/Spoofify/assets/72315013/7925cc5b-d650-4d74-8874-96033587ffe7)
+
+
+
